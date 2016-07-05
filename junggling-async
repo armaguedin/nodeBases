@@ -1,0 +1,53 @@
+     var http = require('http')  
+     var bl = require('bl')  
+     var results = []  
+     var count = 0  
+       
+     function printResults () {  
+       for (var i = 0; i < 3; i++)  
+         console.log(results[i])  
+     }  
+       
+     function httpGet (index) {  
+       http.get(process.argv[2 + index], function (response) {  
+         response.pipe(bl(function (err, data) {  
+           if (err)  
+             return console.error(err)  
+       
+           results[index] = data.toString()  
+           count++  
+       
+           if (count == 3)  
+             printResults()  
+         }))  
+       })  
+     }  
+       
+     for (var i = 0; i < 3; i++)  
+       httpGet(i)  
+   
+   
+   
+   /*
+   
+   var http = require('http');
+var bl   = require('bl');
+var urls = [process.argv[2], process.argv[3], process.argv[4]]
+
+
+var getUrls = function (index){
+    if(index == urls.length)
+        return 0;
+    else
+        http.get(urls[index], function (response){
+            response.pipe(bl(function (err, data){
+                if(err) return console.error(err);
+                console.log(data.toString());
+                getUrls(index+1);
+            }));
+        }).on('error', console.error);
+};
+
+getUrls(0);
+   
+   */
